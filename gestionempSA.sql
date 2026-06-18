@@ -225,3 +225,95 @@ VALUES
 (4, 4, '2025-10-05', 'Asistió'),
 (5, 5, '2025-11-12', 'Aprobado')
 GO
+
+USE gestionempSA
+GO
+
+-- 1. EMPLEADOS
+
+INSERT INTO GestionEmpleados.Empleados (identificacion, nombres, apellidos, fechaNac, sexo, telefono, correo, direccion, fechaContratacion, estadoLaboral, idDepartamento, idCargo)
+VALUES ('98765432', 'Carlos', 'Mendoza', '1995-04-12', 'M', '555-9988', 'carlos.m@empresa.com', 'Calle Alta 456', '2026-01-10', 'Activo', 1, 1)
+GO
+
+SELECT * FROM GestionEmpleados.Empleados
+GO
+
+UPDATE GestionEmpleados.Empleados
+SET telefono = '555-1122', direccion = 'Nueva Av. 890'
+WHERE idEmpleado = 1
+GO
+
+DELETE FROM GestionEmpleados.Empleados
+WHERE idEmpleado = 6
+GO
+
+
+-- 2. DEPARTAMENTOS Y CARGOS
+
+INSERT INTO GestionEmpresa.Departamentos (nombre, descripcion, ubicacion, estado)
+VALUES ('Auditoría', 'Control interno financiero', 'Piso 2 - Oficina 204', 'Activo')
+GO
+
+INSERT INTO GestionEmpleados.Cargos (nombre, descripcion, salarioBase, nivel)
+VALUES ('Auditor Junior', 'Revisión de cuentas', 1500.00, 'Junior')
+GO
+
+UPDATE GestionEmpresa.Departamentos
+SET ubicacion = 'Piso 3 - Oficina 305'
+WHERE idDepartamento = 1
+GO
+
+UPDATE GestionEmpleados.Cargos
+SET salarioBase = 1600.00
+WHERE idCargo = 1
+GO
+
+SELECT * FROM GestionEmpresa.Departamentos
+GO
+
+SELECT * FROM GestionEmpleados.Cargos
+GO
+
+
+-- 3. CONTRATOS
+
+INSERT INTO GestionEmpresa.Contratos (tipo, fechaInicio, fechaFinalizacion, salarioAcordado, estado, idEmpleado)
+VALUES ('Permanente', '2026-01-10', NULL, 1500.00, 'Activo', 1)
+GO
+
+SELECT * FROM GestionEmpresa.Contratos 
+WHERE idEmpleado = 1
+GO
+
+UPDATE GestionEmpresa.Contratos
+SET salarioAcordado = 1700.00, estado = 'Activo'
+WHERE idContrato = 1
+GO
+
+
+-- 4. ASISTENCIA
+
+INSERT INTO GestionEmpresa.Asistencia (fecha, horaEntrada, horaSalida, estado, idEmpleado)
+VALUES ('2026-06-18', '08:00:00', '17:00:00', 'Presente', 1)
+GO
+
+SELECT * FROM GestionEmpresa.Asistencia 
+WHERE idEmpleado = 1 AND fecha = '2026-06-18'
+GO
+
+
+-- 5. CAPACITACIONES
+
+INSERT INTO GestionCapacitaciones.Capacitaciones (nombre, institucionResponsable, duracionHoras, fechaRealizacion)
+VALUES ('Introducción a la Seguridad de Datos', 'Tech Academy', 10, '2026-05-20')
+GO
+
+INSERT INTO GestionCapacitaciones.Empleado_Capacitacion (idEmpleado, idCapacitacion, fechaParticipacion, resultadoObtenido)
+VALUES (1, 1, '2026-05-20', 'Completado')
+GO
+
+SELECT c.idCapacitacion, c.nombre, c.institucionResponsable, ec.fechaParticipacion, ec.resultadoObtenido
+FROM GestionCapacitaciones.Empleado_Capacitacion ec
+INNER JOIN GestionCapacitaciones.Capacitaciones c ON ec.idCapacitacion = c.idCapacitacion
+WHERE ec.idEmpleado = 1
+GO
